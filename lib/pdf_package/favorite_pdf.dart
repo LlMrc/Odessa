@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
+import 'package:lottie/lottie.dart';
 import 'package:path/path.dart';
 import 'package:pdf_render/pdf_render_widgets.dart';
 
@@ -31,9 +31,10 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 230, 230),
+      backgroundColor:  Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text('Favorites Books'),
+        title: const Text('Bookmark'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 14, left: 8, right: 8),
@@ -42,7 +43,7 @@ class _FavoritePageState extends State<FavoritePage> {
             builder: (context, box, _) {
               final currentFavorite = box.values.toList().cast<Favorite>();
               if (currentFavorite.isEmpty) {
-                return const Center(child: Text('No Files'));
+                return  Center(child: LottieBuilder.asset('assets/empty.json'));
               } else {
                 return ListView.builder(
                     itemCount: currentFavorite.length,
@@ -96,16 +97,16 @@ class _FavoritePageState extends State<FavoritePage> {
               }
             }),
       ),
-        bottomNavigationBar: _bannerAd == null? const SizedBox(): Container(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            height: 58,
-            child: AdWidget(ad: _bannerAd!),
-          ),
+      bottomNavigationBar: _bannerAd == null
+          ? const SizedBox()
+          : Container(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              height: 58,
+              child: AdWidget(ad: _bannerAd!),
+            ),
     );
   }
-
-
 
   void didssmisFavorite(Favorite i) {
     i.delete();
@@ -122,7 +123,8 @@ class _FavoritePageState extends State<FavoritePage> {
   void _creatBannerAd() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
-        adUnitId:"/120940746/pub-66798-android-9676",//AbmobService.bannerAdsId!,
+        adUnitId:
+            "/120940746/pub-66798-android-9676", //AbmobService.bannerAdsId!,
         listener: AbmobService.bannerAdListener,
         request: const AdRequest())
       ..load();

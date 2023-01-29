@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
+import 'package:pdf_reader/constant.dart';
 import 'package:pdf_reader/service/book_model.dart';
 
 class FetchBookFromGoogle extends StatefulWidget {
@@ -22,7 +25,7 @@ class _FetchBookFromGoogleState extends State<FetchBookFromGoogle> {
 
   @override
   Widget build(BuildContext context) {
-    final Image noImage = Image.asset("assets/thumbnail.png");
+   
 
     return Scaffold(
         appBar: AppBar(
@@ -79,9 +82,17 @@ class _FetchBookFromGoogleState extends State<FetchBookFromGoogle> {
 
                 case ConnectionState.done:
                   if (snapshotData == null) {
-                    return const Center(child: Text('error'));
+                    return  Center(child: SizedBox(
+                      width: 200,
+                      height: 200,
+                      child: Column(
+                        children: const [
+                          Icon(FontAwesomeIcons.wifi),
+                          Text('No connection')
+                        ],
+                      )));
                   } else if (snapshotData.isEmpty) {
-                    return const Center(child: Text('no File Found'));
+                    return const Center(child: Text('No File Found'));
                   }
                   {
                     return ListView.builder(

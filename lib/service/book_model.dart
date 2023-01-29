@@ -62,13 +62,21 @@ class _DetailsBookState extends State<DetailsBook> {
             title: const Text('Books and magazines'),
             centerTitle: true,
             actions: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) =>
-                            Browser(initialUrl: widget.previewedLink)));
-                  },
-                  icon: Icon(FontAwesomeIcons.readme, color: Colors.amber.shade200,))
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: InkWell(
+                    onTap: () {
+                      _launchInBrowser(valideWebReader == true
+                          ? Uri.parse(widget.initialRoute)
+                          : Uri.parse("https://www.google.com/"));
+                    },
+                    child: Image.asset(
+                    "assets/thumbnail.png",
+                    width: 40,
+                    height: 40,
+                      color: Colors.amber.shade200,
+                    )),
+              )
             ],
           ),
           body: Center(
@@ -121,17 +129,20 @@ class _DetailsBookState extends State<DetailsBook> {
                                   indent: 40,
                                   endIndent: 40,
                                 ),
-                                Padding(
+                                Container(
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 12),
-                                  child: Text(
-                                    descp,
-                                    maxLines: 10,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w300),
+                                    vertical: 8.0, horizontal: 12),
+                                  height: 270,
+                                  child: SingleChildScrollView(
+                                    child: Text(
+                                      descp,
+                                     maxLines: descp.length,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w300),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -143,12 +154,12 @@ class _DetailsBookState extends State<DetailsBook> {
                                       color: Color(0xff0F52BA)),
                                 ),
                                 onPressed: () {
-                                  _launchInBrowser(valideWebReader == true
-                                      ? Uri.parse(widget.initialRoute)
-                                      : Uri.parse("https://www.google.com/"));
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) => Browser(
+                                          initialUrl: widget.previewedLink)));
                                 },
                                 child: Text(
-                                  'Read more',
+                                  'Previewed',
                                   style: TextStyle(color: Colors.grey.shade800),
                                 ))
                           ],

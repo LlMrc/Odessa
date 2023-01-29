@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -6,7 +7,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../api/admob_helper.dart';
 
 class Browser extends StatefulWidget {
-  const Browser({Key? key,  this.initialUrl = "https://www.google.com/"}) : super(key: key);
+  const Browser({Key? key, this.initialUrl = "https://www.google.com/"})
+      : super(key: key);
   final String initialUrl;
   @override
   State<Browser> createState() => _BrowserState();
@@ -14,12 +16,14 @@ class Browser extends StatefulWidget {
 
 class _BrowserState extends State<Browser> {
   double progress = 0;
-  bool initInterstitial = false;
+
+
 
   @override
   void initState() {
     super.initState();
     createInterstitialAds();
+   
   }
 
   late WebViewController controller;
@@ -32,11 +36,9 @@ class _BrowserState extends State<Browser> {
 
   @override
   Widget build(BuildContext context) {
-    print('$initInterstitial');
     return SafeArea(
       child: WillPopScope(
         onWillPop: () async {
-          iniIntersitial();
           if (await controller.canGoBack()) {
             controller.goBack();
             return false;
@@ -70,39 +72,67 @@ class _BrowserState extends State<Browser> {
               ),
             ],
           ),
+          extendBody: true,
           bottomNavigationBar: Container(
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(boxShadow: const [
+              BoxShadow(
+                  offset: Offset(4, 4), color: Colors.black54, blurRadius: 10)
+            ], color: Colors.white, borderRadius: BorderRadius.circular(30)),
             height: 40,
-            color: Colors.black38,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.clear_rounded),
-                  onPressed: () {
-                    controller.clearCache();
-                    CookieManager().clearCookies();
-                    setState(() => initInterstitial = true);
-                  },
-                ),
+                    icon: const Icon(Icons.clear_rounded),
+                    onPressed: () {
+                      controller.clearCache();
+                      CookieManager().clearCookies();
+                    }),
                 IconButton(
                     onPressed: () async {
-                      setState(
-                        () => initInterstitial = true,
-                      );
+                      controller.loadUrl("https://www.twitter.com/");
+                      await Future.delayed(const Duration(seconds: 20));
+                      _showInterstitialAds();
+                    },
+                    icon: const Icon(FontAwesomeIcons.twitter,
+                        color: Colors.blue)),
+                IconButton(
+                    onPressed: () async {
+                      controller.loadUrl("https://www.facebook.com/");
+                      await Future.delayed(const Duration(seconds: 20));
+                      _showInterstitialAds();
+                    },
+                    icon: const Icon(FontAwesomeIcons.facebook,
+                        color: Color(0xff0F52BA))),
+                IconButton(
+                    onPressed: () async {
+                      controller.loadUrl("https://www.youtube.com/");
+                      await Future.delayed(const Duration(seconds: 15));
+                      _showInterstitialAds();
+                    },
+                    icon: const Icon(
+                      FontAwesomeIcons.youtube,
+                      color: Colors.red,
+                    )),
+                IconButton(
+                    onPressed: () async {
+                      controller.loadUrl("https://www.amazon.com/");
+                      await Future.delayed(const Duration(seconds: 10));
+                      _showInterstitialAds();
+                    },
+                    icon: const SizedBox(
+                        width: 60,
+                        height: 25,
+                        child: Icon(FontAwesomeIcons.amazon))),
+                IconButton(
+                    onPressed: () async {
                       if (await controller.canGoBack()) {
+                        _showInterstitialAds();
                         controller.reload();
                       }
                     },
                     icon: const Icon(Icons.refresh)),
-                GestureDetector(
-                    onTap: () async {
-                      controller.loadUrl("https://www.amazon.com/");
-                      setState(() => initInterstitial = true);
-                    },
-                    child: const SizedBox(
-                        width: 60,
-                        height: 25,
-                        child: Icon(FontAwesomeIcons.amazon))),
               ],
             ),
           ),
@@ -110,6 +140,8 @@ class _BrowserState extends State<Browser> {
       ),
     );
   }
+
+ 
 
   InterstitialAd? _interstitialAd;
 
@@ -128,19 +160,15 @@ class _BrowserState extends State<Browser> {
           FullScreenContentCallback(onAdDismissedFullScreenContent: (ad) {
         ad.dispose();
         createInterstitialAds();
-        print('show ads');
+        if (kDebugMode) {
+          print('show ads');
+        }
       }, onAdFailedToShowFullScreenContent: (ad, error) {
         ad.dispose();
         createInterstitialAds();
       });
       _interstitialAd!.show();
       _interstitialAd = null;
-    }
-  }
-
-  void iniIntersitial() {
-    if (initInterstitial == true) {
-      _showInterstitialAds();
     }
   }
 }
