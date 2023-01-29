@@ -62,20 +62,24 @@ class NotePageState extends State<NotePage> {
                         final currentNote = box.values.toList().cast<Note>();
                         if (currentNote.isEmpty) {
                           return Center(
-                              child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                              child: SizedBox(
+                                height: 200,
+                                width: 150,
+                                child: Column(
+                          //  mainAxisSize: MainAxisSize.min,
+                         //   crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              LottieBuilder.asset('assets/book.json'),
-                              const Text(
-                                'No Notes Found!',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    letterSpacing: 2),
-                              ),
+                                LottieBuilder.asset('assets/book.json'),
+                                const Text(
+                                  'Add notes',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      letterSpacing: 2),
+                                ),
                             ],
-                          ));
+                          ),
+                              ));
                         } else {
                           return MasonryGridView.count(
                               primary: false,
@@ -141,11 +145,11 @@ class NotePageState extends State<NotePage> {
       //--------}----------- floatingActionButton--------------------------------
 
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue.withOpacity(0.3),
+          backgroundColor: Colors.white.withOpacity(0.3),
           tooltip: 'Add note',
           elevation: 4,
           child: const Icon(
-            Icons.edit,
+            Icons.add,
             semanticLabel: 'Edit',
           ),
           onPressed: () async {

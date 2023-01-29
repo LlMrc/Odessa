@@ -90,9 +90,10 @@ class _MultimrdiaState extends State<Multimedia> {
                                         )),
                                         title: Text(playlistTitles[index],
                                             maxLines: 2,
+
                                             style: const TextStyle(
-                                              color: Colors.white60,
-                                              fontSize: 16,
+                                              color: Colors.grey,
+                                              fontSize: 18,
                                               shadows: [
                                               Shadow(
                                               // blurRadius: 0.5,
@@ -168,7 +169,7 @@ class _MultimrdiaState extends State<Multimedia> {
             height: 58,
             color: Colors.white12,
             child: const Text('A U D I O  P L A Y E R',
-                style: TextStyle(color: Colors.black,
+                style: TextStyle(color: Color(0xff0F52BA),
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                  letterSpacing: 2.0,

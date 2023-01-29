@@ -5,17 +5,13 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 //import 'package:path/path.dart' as p;
 import 'package:pdf_reader/pdf_package/thumbnails.dart';
-
 import 'package:permission_handler/permission_handler.dart';
 
 import '../api/pdf_api.dart';
 import '../constant.dart';
 import '../multimedia/page_manager.dart';
-
-
 import '../service/remote_google_book.dart';
 import '../service/service.dart';
 import 'browser.dart';
@@ -138,24 +134,19 @@ class _DocumentListviewState extends State<DocumentListview> {
           ],
           centerTitle: true,
           title: Container(
-
             height: 36,
             decoration: BoxDecoration(
-              color:const Color.fromARGB(255, 27, 97, 202),
+                color: const Color.fromARGB(255, 27, 97, 202),
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: const [
                   BoxShadow(
-                  
-                 color: Colors.black38,
-        spreadRadius: 1,
-        blurRadius: 3,
-        offset: Offset(2, 2)
-                  ),
-
-                  ]
-                ),
+                      color: Colors.black38,
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(2, 2)),
+                ]),
             child: TextField(
-              style:const TextStyle(color: Colors.white60, fontSize: 18),
+              style: const TextStyle(color: Colors.white60, fontSize: 18),
               onSubmitted: (value) {
                 Navigator.push(
                     context,
@@ -168,22 +159,20 @@ class _DocumentListviewState extends State<DocumentListview> {
               textAlignVertical: TextAlignVertical.center,
               maxLines: 1,
               decoration: InputDecoration(
-             
                 hintStyle: const TextStyle(color: Colors.white54),
                 filled: true,
-                suffixIcon:  IconButton(icon:  Icon(Icons.clear, color: Colors.blue.shade300), 
-                onPressed: () { 
-                            editingController.clear();
-                 },),
-           
-               errorBorder: InputBorder.none,
-               enabledBorder: InputBorder.none,
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.clear, color: Colors.blue.shade300),
+                  onPressed: () {
+                    editingController.clear();
+                  },
+                ),
+                errorBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 contentPadding:
                     const EdgeInsets.only(top: 10, bottom: 7, left: 8),
                 hintText: "search...",
-                
-                
               ),
             ),
           )),
@@ -210,7 +199,7 @@ class _DocumentListviewState extends State<DocumentListview> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              'Please allow stockage 🗝access to display local PDF files'
+                              'Please allow storage access 🗝 to view local PDFs'
                                   .toUpperCase(),
                               textAlign: TextAlign.center,
                               selectionColor: Colors.red,
@@ -221,11 +210,15 @@ class _DocumentListviewState extends State<DocumentListview> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               ElevatedButton(
-                                  onPressed: () {},
-                                  child: Text('deny'.toUpperCase())),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Deny')),
                               ElevatedButton(
-                                  onPressed: () => checkStoragePermission(),
-                                  child: Text('allow'.toUpperCase())),
+                                  onPressed: ()async {
+checkStoragePermission();
+                                  } ,
+                                  child: const Text('Allow')),
                             ],
                           )
                         ]),
