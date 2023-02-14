@@ -22,8 +22,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      double _width = constraints.maxWidth;
-      if (_width > smallScreen) {
+      double width = constraints.maxWidth;
+      if (width > smallScreen) {
         return const TableteBody();
       }
       return const MobileBody();

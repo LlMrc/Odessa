@@ -1,4 +1,4 @@
-import 'dart:ui';
+
 
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class _EditNoteState extends State<EditNote> {
 
   @override
   Widget build(BuildContext context) {
-    bool _isLandScape =
+    bool isLandScape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
       backgroundColor: const Color(0xff2C394B),
@@ -38,7 +38,7 @@ class _EditNoteState extends State<EditNote> {
           child: Column(
             children: [
               Visibility(
-                visible: _isLandScape ? false : true,
+                visible: isLandScape ? false : true,
                 child: AppBar(
                   backgroundColor: Colors.transparent,
                   elevation: 0,

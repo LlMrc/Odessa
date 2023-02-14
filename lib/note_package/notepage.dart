@@ -26,7 +26,7 @@ class NotePageState extends State<NotePage> {
     super.initState();
   }
 
-  final TextEditingController _editingController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +169,7 @@ class NotePageState extends State<NotePage> {
       child: ListView.builder(
           itemCount: 12,
           itemBuilder: (context, indext) {
-            return ListTile(
+            return const ListTile(
               title: Text("search text"),
             );
           }),

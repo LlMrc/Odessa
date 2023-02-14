@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'package:lottie/lottie.dart';
+
 import 'package:pdf_reader/constant.dart';
 import 'package:pdf_reader/service/book_model.dart';
 
@@ -35,6 +36,7 @@ class _FetchBookFromGoogleState extends State<FetchBookFromGoogle> {
                 color: Colors.blue.shade200.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(30)),
             child: TextField(
+             
               onSubmitted: (value) {
                 setState(() {
                   _textEditingController.text = value;
@@ -45,6 +47,7 @@ class _FetchBookFromGoogleState extends State<FetchBookFromGoogle> {
               maxLines: 1,
               style: const TextStyle(color: Colors.white60, fontSize: 18),
               decoration: InputDecoration(
+                   fillColor: const Color.fromARGB(255, 27, 97, 202),
                 hintStyle: const TextStyle(color: Colors.white54),
                 filled: true,
                 suffixIcon: IconButton(
@@ -53,12 +56,15 @@ class _FetchBookFromGoogleState extends State<FetchBookFromGoogle> {
                 ),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.white)),
+                    borderSide: const BorderSide(color: Colors.purple)),
                 errorBorder: InputBorder.none,
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: const BorderSide(color: Colors.green)),
                 contentPadding:
                     const EdgeInsets.only(top: 10, bottom: 7, left: 8),
                 hintText: "search...",
-                fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+             //   fillColor: Theme.of(context).inputDecorationTheme.fillColor,
               ),
             ),
           ),
@@ -111,7 +117,9 @@ class _FetchBookFromGoogleState extends State<FetchBookFromGoogle> {
                               "https://docs.google.com/document/d/1ZHQ4MP4YKfcOuExUwtxg_qU87X9RnO3iORBU0b6N-mk/edit?usp=share_link";
 
                           bool validURL = Uri.parse(url).isAbsolute;
-                          print(previewedLink);
+                          if (kDebugMode) {
+                            print(previewedLink);
+                          }
                           return InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(

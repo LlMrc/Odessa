@@ -135,15 +135,15 @@ class _DocumentListviewState extends State<DocumentListview> {
           centerTitle: true,
           title: Container(
             height: 36,
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 27, 97, 202),
-                borderRadius: BorderRadius.circular(30),
+            decoration:  BoxDecoration(
+             borderRadius: BorderRadius.circular(30),
+       
                 boxShadow: const [
                   BoxShadow(
-                      color: Colors.black38,
+                      color: Colors.black26,
                       spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: Offset(2, 2)),
+                      blurRadius: 4,
+                      offset: Offset(1, 1)),
                 ]),
             child: TextField(
               style: const TextStyle(color: Colors.white60, fontSize: 18),
@@ -159,17 +159,25 @@ class _DocumentListviewState extends State<DocumentListview> {
               textAlignVertical: TextAlignVertical.center,
               maxLines: 1,
               decoration: InputDecoration(
+                border: OutlineInputBorder( 
+                
+                borderRadius: BorderRadius.circular(30)) ,
+                fillColor: const Color.fromARGB(255, 27, 97, 202),
                 hintStyle: const TextStyle(color: Colors.white54),
-                filled: true,
+               filled: true,
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear, color: Colors.blue.shade300),
                   onPressed: () {
                     editingController.clear();
                   },
                 ),
-                errorBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
+               // errorBorder: InputBorder.none,
+              //  enabledBorder: InputBorder.none,
+              
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: const BorderSide(color: Colors.green)),
+
                 contentPadding:
                     const EdgeInsets.only(top: 10, bottom: 7, left: 8),
                 hintText: "search...",

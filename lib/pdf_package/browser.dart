@@ -1,10 +1,19 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
-import '../api/admob_helper.dart';
+// #docregion platform_imports
+// Import for Android features.
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+// Import for iOS features.
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+
 
 class Browser extends StatefulWidget {
   const Browser({Key? key, this.initialUrl = "https://www.google.com/"})
@@ -15,15 +24,84 @@ class Browser extends StatefulWidget {
 }
 
 class _BrowserState extends State<Browser> {
-  double progress = 0;
-
-
+  int progressIndicator = 0;
 
   @override
   void initState() {
     super.initState();
     createInterstitialAds();
-   
+
+    late final PlatformWebViewControllerCreationParams params;
+    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+      params = WebKitWebViewControllerCreationParams(
+        allowsInlineMediaPlayback: true,
+        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
+      );
+    } else {
+      params = const PlatformWebViewControllerCreationParams();
+    }
+
+    final WebViewController controller =
+        WebViewController.fromPlatformCreationParams(params);
+    // #enddocregion platform_features
+
+    controller
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0xffEEF2FF))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            setState(() => progressIndicator = progress);
+
+            debugPrint('WebView is loading (progress : $progressIndicator%)');
+          },
+          onPageStarted: (String url) {
+            controller.runJavaScript(
+                "document.getElementsByClassName('elementor elementor-7715 elementor-location-header')[0].style.display='none'");
+            controller.runJavaScript(
+                "document.getElementsByClassName('elementor elementor-2727 elementor-location-footer')[0].style.display='none'");
+            debugPrint('Page started loading: $url');
+          },
+          onPageFinished: (String url) =>
+              debugPrint('Page finished loading: $url'),
+          onWebResourceError: (WebResourceError error) {
+            debugPrint('''
+Page resource error:
+  code: ${error.errorCode}
+  description: ${error.description}
+  errorType: ${error.errorType}
+  isForMainFrame: ${error.isForMainFrame}
+          ''');
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith('https://www.youtube.com/')) {
+              debugPrint('blocking navigation to ${request.url}');
+              return NavigationDecision.prevent;
+            }
+            debugPrint('allowing navigation to ${request.url}');
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..addJavaScriptChannel(
+        'Toaster',
+        onMessageReceived: (JavaScriptMessage message) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message.message)),
+          );
+        },
+      )
+      ..loadRequest(Uri.parse("https://www.google.com/"));
+
+    // #docregion platform_features
+    if (controller.platform is AndroidWebViewController) {
+      AndroidWebViewController.enableDebugging(true);
+      (controller.platform as AndroidWebViewController)
+          .setMediaPlaybackRequiresUserGesture(false);
+    }
+    // #enddocregion platform_features
+
+    this.controller = controller;
   }
 
   late WebViewController controller;
@@ -50,25 +128,12 @@ class _BrowserState extends State<Browser> {
           body: Column(
             children: [
               LinearProgressIndicator(
-                value: progress,
+                value: progressIndicator.toDouble(),
                 color: Colors.red,
                 backgroundColor: Colors.black12,
               ),
               Expanded(
-                child: WebView(
-                  initialUrl: widget.initialUrl,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  onWebViewCreated: (controller) {
-                    this.controller = controller;
-                  },
-                  onPageStarted: (url) {},
-                  onProgress: (progress) => setState(() {
-                    this.progress = progress / 100;
-                  }),
-                  // gestureRecognizers: Set()
-                  //   ..add(Factory<VerticalDragGestureRecognizer>(
-                  //       () => VerticalDragGestureRecognizer())),
-                ),
+                child: WebViewWidget(controller: controller),
               ),
             ],
           ),
@@ -87,29 +152,32 @@ class _BrowserState extends State<Browser> {
                     icon: const Icon(Icons.clear_rounded),
                     onPressed: () {
                       controller.clearCache();
-                      CookieManager().clearCookies();
+                      cookieManager.clearCookies();
                     }),
                 IconButton(
                     onPressed: () async {
-                      controller.loadUrl("https://www.twitter.com/");
-                      await Future.delayed(const Duration(seconds: 20));
-                      _showInterstitialAds();
+                      controller
+                          .loadRequest(Uri.parse("https://www.twitter.com/"));
+
+                     _displayAds();
                     },
                     icon: const Icon(FontAwesomeIcons.twitter,
                         color: Colors.blue)),
                 IconButton(
                     onPressed: () async {
-                      controller.loadUrl("https://www.facebook.com/");
-                      await Future.delayed(const Duration(seconds: 20));
-                      _showInterstitialAds();
+                      controller
+                          .loadRequest(Uri.parse("https://www.facebook.com/"));
+
+                     _displayAds();
                     },
                     icon: const Icon(FontAwesomeIcons.facebook,
                         color: Color(0xff0F52BA))),
                 IconButton(
                     onPressed: () async {
-                      controller.loadUrl("https://www.youtube.com/");
-                      await Future.delayed(const Duration(seconds: 15));
-                      _showInterstitialAds();
+                      controller
+                          .loadRequest(Uri.parse("https://www.youtube.com/"));
+
+                      _displayAds();
                     },
                     icon: const Icon(
                       FontAwesomeIcons.youtube,
@@ -117,9 +185,10 @@ class _BrowserState extends State<Browser> {
                     )),
                 IconButton(
                     onPressed: () async {
-                      controller.loadUrl("https://www.amazon.com/");
-                      await Future.delayed(const Duration(seconds: 10));
-                      _showInterstitialAds();
+                      controller
+                          .loadRequest(Uri.parse("https://www.amazon.com/"));
+
+                      _displayAds();
                     },
                     icon: const SizedBox(
                         width: 60,
@@ -128,7 +197,6 @@ class _BrowserState extends State<Browser> {
                 IconButton(
                     onPressed: () async {
                       if (await controller.canGoBack()) {
-                        _showInterstitialAds();
                         controller.reload();
                       }
                     },
@@ -141,13 +209,13 @@ class _BrowserState extends State<Browser> {
     );
   }
 
- 
+  final WebViewCookieManager cookieManager = WebViewCookieManager();
 
   InterstitialAd? _interstitialAd;
 
   void createInterstitialAds() {
     InterstitialAd.load(
-        adUnitId: AbmobService.interstitialAdsId!,
+        adUnitId: randomId(),// /120940746/pub-66798-android-9676
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
             onAdLoaded: (InterstitialAd ad) => _interstitialAd = ad,
@@ -170,5 +238,21 @@ class _BrowserState extends State<Browser> {
       _interstitialAd!.show();
       _interstitialAd = null;
     }
+  }
+  String randomId() {
+    List<String> idList = [
+      "ca-app-pub-3900780607450933/3686025845",
+      "/120940746/pub-66798-android-9676"
+    ];
+    String randomIndex =
+        (idList..shuffle()).first;
+    print(randomIndex);
+    return randomIndex;
+  }
+
+  void _displayAds() {
+    Timer(const Duration(seconds: 20), () {
+      _showInterstitialAds();
+    });
   }
 }

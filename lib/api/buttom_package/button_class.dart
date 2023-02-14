@@ -38,7 +38,7 @@ class RepeatButton extends StatelessWidget {
         Icon icon;
         switch (value) {
           case RepeatState.off:
-            icon =  Icon(Icons.repeat, color: Colors.amber[100]);
+            icon =  const Icon(Icons.repeat, color: Colors.black);
             break;
           case RepeatState.repeatSong:
             icon = const Icon(Icons.repeat_one);
@@ -67,7 +67,7 @@ class PreviousSongButton extends StatelessWidget {
       builder: (_, isFirst, __) {
         return IconButton(
              iconSize: 32.0,
-          color: Colors.amber[100],
+          color: Colors.black,
           icon: const Icon(Icons.skip_previous),
           onPressed: (isFirst) ? null : pageManager.previous,
         );
@@ -94,14 +94,14 @@ class PlayButton extends StatelessWidget {
             );
           case ButtonState.paused:
             return IconButton(
-               color: Colors.tealAccent,
+               color: Colors.red,
               icon: const Icon(Icons.play_arrow),
               iconSize: 32.0,
               onPressed: pageManager.play,
             );
           case ButtonState.playing:
             return IconButton(
-               color: Colors.amber[100],
+               color: Colors.black,
               icon: const Icon(Icons.pause),
               iconSize: 32.0,
               onPressed: pageManager.pause,
@@ -122,7 +122,7 @@ class NextSongButton extends StatelessWidget {
       builder: (_, isLast, __) {
         return IconButton(
              iconSize: 32.0,
-           color: Colors.amber[100],
+           color: Colors.black,
           icon: const Icon(Icons.skip_next),
           onPressed: (isLast) ? null : pageManager.next,
         );
@@ -142,8 +142,8 @@ class ShuffleButton extends StatelessWidget {
         return IconButton(
              iconSize: 20.0,
           icon: (isEnabled)
-              ?  const Icon(Icons.shuffle,  color: Colors.black,)
-              :  Icon(Icons.shuffle, color: Colors.amber[100],),
+              ?  const Icon(Icons.shuffle,  color: Colors.red,)
+              :  const Icon(Icons.shuffle, color: Colors.black,),
           onPressed: pageManager.shuffle,
         );
       },

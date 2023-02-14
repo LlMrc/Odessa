@@ -39,26 +39,33 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
 
   void _showContextMenu(
       BuildContext context, PdfTextSelectionChangedDetails details) {
-    final OverlayState _overlayState = Overlay.of(context)!;
+     OverlayState overlayState = Overlay.of(context);
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         top: details.globalSelectedRegion!.center.dy - 55,
         left: details.globalSelectedRegion!.bottomLeft.dx,
-        child: ElevatedButton(
-          onPressed: () {
-            Clipboard.setData(ClipboardData(text: details.selectedText));
-
+        child: GestureDetector(
+          onTap: (){
+             Clipboard.setData(ClipboardData(text: details.selectedText));
             // your method where use the context
             // Example navigate:
             _showDialog(details.selectedText.toString());
 
             _pdfViewerController.clearSelection();
           },
-          child: const Text('Copy', style: TextStyle(fontSize: 17)),
+          child: const Card(
+        
+            elevation: 8,
+          
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('Copy', style: TextStyle(fontSize: 17, color: Colors.blue)),
+            ),
+          ),
         ),
       ),
     );
-    _overlayState.insert(_overlayEntry!);
+    overlayState.insert(_overlayEntry!);
   }
 
   _showDialog(String note) async {
@@ -132,13 +139,14 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
                         _pdfViewerController.zoomLevel = 1.25;
                       },
                       icon:  const Icon(Icons.zoom_in,
+                      color: Colors.black,
                   )),
                 ],
                 leading: IconButton(
                     onPressed: () {
                       _pdfViwerStateKey.currentState!.openBookmarkView();
                     },
-                    icon:  const Icon(Icons.bookmark_border,
+                    icon:  const Icon(Icons.bookmark_border,color: Colors.black,
                 )),
                 title: Text(
                   name,

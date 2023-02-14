@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pdf_reader/pdf_package/browser.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -222,7 +223,9 @@ class _DetailsBookState extends State<DetailsBook> {
           FullScreenContentCallback(onAdDismissedFullScreenContent: (ad) {
         ad.dispose();
         createInterstitialAds();
-        print('show ads');
+        if (kDebugMode) {
+          print('show ads');
+        }
       }, onAdFailedToShowFullScreenContent: (ad, error) {
         ad.dispose();
         createInterstitialAds();

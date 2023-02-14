@@ -33,7 +33,7 @@ class _TableteBodyState extends State<TableteBody> {
           NavigationRail(
               leading: Material(
                   clipBehavior: Clip.hardEdge,
-                  shape: const CircleBorder(),
+                  shape:  CircleBorder(side: BorderSide(color: Colors.grey.shade300)),
                   child: InkWell(
                       onTap: () => setState(() => isExpanded = !isExpanded),
                       child: Ink.image(
@@ -46,7 +46,7 @@ class _TableteBodyState extends State<TableteBody> {
               unselectedLabelTextStyle:
                   labelStyle.copyWith(color: unselectedColor),
               selectedIconTheme:
-                  const IconThemeData(color: Colors.white, size: 30),
+                  const IconThemeData(color: Colors.red, size: 30),
               extended: isExpanded,
               unselectedIconTheme: const IconThemeData(color: Colors.white38),
               backgroundColor: const Color(0xff0F52BA),
@@ -74,7 +74,7 @@ class _TableteBodyState extends State<TableteBody> {
                         children: const [
                           Icon(
                             Icons.logout,
-                            color: Colors.white,
+
                             size: 28,
                           ),
 

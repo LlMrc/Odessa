@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:pdf_render/pdf_render_widgets.dart';
@@ -26,6 +27,7 @@ class _ThumbnailsState extends State<Thumbnails> {
         header: Align(
           alignment: Alignment.topRight,
           child: PopupMenuButton(
+            icon:const Icon(Icons.more_vert_rounded, color: Colors.grey),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0)),
               offset: const Offset(5.0, 4.0),
@@ -114,7 +116,9 @@ class _ThumbnailsState extends State<Thumbnails> {
       await file.delete(recursive: true);
     }
     try {} catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }
